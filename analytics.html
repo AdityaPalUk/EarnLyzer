@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Earnlyzer Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #4e73df, #1cc88a);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #4e73df;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    input {
+      flex: 1 1 40%;
+    }
+
+    button {
+      background: #1cc88a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #17a673;
+    }
+
+    canvas {
+      max-width: 100%;
+      margin-top: 30px;
+    }
+
+    #totalDisplay {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 10px;
+      color: #333;
+    }
+
+    .download-btn {
+      margin-top: 15px;
+      background: #4e73df;
+    }
+
+    .download-btn:hover {
+      background: #2e59d9;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    📊 Financial Analytics
+  </header>
+
+  <div class="container">
+    <h2>Enter Investment Data</h2>
+    <form id="analytics-form">
+      <input type="text" id="month-input" placeholder="Month (e.g. Jan)" required />
+      <input type="number" id="amount-input" placeholder="Amount ($)" required />
+      <button type="submit">Add</button>
+    </form>
+
+    <p id="totalDisplay">Total Investment: $0.00</p>
+    <button class="download-btn" onclick="downloadCSV()">⬇️ Download CSV</button>
+
+    <!-- Line Chart -->
+    <div>
+      <canvas id="lineChart" height="100"></canvas>
+    </div>
+
+    <!-- Bar Chart -->
+    <div>
+      <canvas id="barChart" height="100"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const months = [];
+    const amounts = [];
+
+    const form = document.getElementById('analytics-form');
+    const monthInput = document.getElementById('month-input');
+    const amountInput = document.getElementById('amount-input');
+
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    const barCtx = document.getElementById('barChart').getContext('2d');
+
+    let lineChart = new Chart(lineCtx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Investment Over Time',
+          data: amounts,
+          fill: false,
+          borderColor: '#4e73df',
+          tension: 0.3
+        }]
+      }
+    });
+
+    let barChart = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Monthly Investment',
+          data: amounts,
+          backgroundColor: '#18dfd8'
+        }]
+      }
+    });
+
+    function updateTotal() {
+      const total = amounts.reduce((acc, val) => acc + val, 0);
+      document.getElementById('totalDisplay').innerText = `Total Investment: $${total.toFixed(2)}`;
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const month = monthInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+
+      if (month && !isNaN(amount)) {
+        months.push(month);
+        amounts.push(amount);
+
+        lineChart.update();
+        barChart.update();
+        updateTotal();
+
+        monthInput.value = '';
+        amountInput.value = '';
+      }
+    });
+
+    function downloadCSV() {
+      let csv = "Month,Amount($)\n";
+      for (let i = 0; i < months.length; i++) {
+        csv += `${months[i]},${amounts[i].toFixed(2)}\n`;
+      }
+
+      // Add Total Investment at the end of the CSV file
+      const totalInvestment = amounts.reduce((acc, val) => acc + val, 0);
+      csv += `Total Investment,${totalInvestment.toFixed(2)}\n`;
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "investment_data.csv";
+      link.click();
+    }
+  </script>
+
+</body>
+</html>

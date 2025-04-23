@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Earnlyzer Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f4f7fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(90deg, #4e73df, #6a89ff);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 30px;
+      color: #4e73df;
+    }
+
+    form {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    input, select, button {
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background: #1cc88a;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #17a673;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 30px;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #eef3fb;
+      padding: 25px;
+      border-radius: 12px;
+      flex: 1 1 28%;
+      margin: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      color: #2e59d9;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #111;
+    }
+
+    .expenses {
+      margin-top: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4e73df;
+      color: white;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      background-color: #4e73df;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .stats {
+        flex-direction: column;
+      }
+    }
+
+    canvas {
+      margin-top: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .download-buttons {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .download-buttons button {
+      margin: 5px;
+      background-color: #4e73df;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>💸 Earnlyzer - Smart Financial Dashboard</h1>
+</header>
+
+<div class="container">
+  <h2>💰 Add Salary</h2>
+  <form id="salary-form">
+    <input type="number" id="salary-input" placeholder="Enter your salary" required />
+    <button type="submit">Add Salary</button>
+  </form>
+
+  <h2>🧾 Add Expense</h2>
+  <form id="expense-form">
+    <input type="text" id="expense-category" placeholder="Category (e.g. Food, Rent)" required />
+    <input type="number" id="expense-amount" placeholder="Amount" required />
+    <button type="submit">Add Expense</button>
+  </form>
+
+  <h2>🏦 Add Saving</h2>
+  <form id="saving-form">
+    <input type="text" id="saving-category" placeholder="Saving Category" required />
+    <input type="number" id="saving-amount" placeholder="Amount" required />
+    <button type="submit">Add Saving</button>
+  </form>
+
+  <div class="stats">
+    <div class="card">
+      <h3>💼 Total Salary</h3>
+      <p id="total-salary">$0</p>
+    </div>
+    <div class="card">
+      <h3>🧾 Total Spent</h3>
+      <p id="total-spent">$0</p>
+    </div>
+    <div class="card">
+      <h3>💳 Remaining</h3>
+      <p id="remaining-balance">$0</p>
+    </div>
+    <div class="card">
+      <h3>💰 Total Savings</h3>
+      <p id="total-savings">$0</p>
+    </div>
+    <div class="card">
+      <h3>💡 Suggested Savings (20%)</h3>
+      <p id="suggested-savings">$0</p>
+      <button onclick="applySuggestedSavings()">Apply</button>
+    </div>
+  </div>
+
+  <div class="expenses">
+    <h2>📊 Expense Breakdown</h2>
+    <canvas id="expenseChart"></canvas>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Amount ($)</th>
+        </tr>
+      </thead>
+      <tbody id="expense-table-body"></tbody>
+    </table>
+  </div>
+
+  <div class="expenses">
+    <h2>🏦 Saving Breakdown</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Amount ($)</th>
+        </tr>
+      </thead>
+      <tbody id="saving-table-body"></tbody>
+    </table>
+  </div>
+
+  <div class="download-buttons">
+    <button onclick="downloadCSV('expenses')">Download Expenses CSV</button>
+    <button onclick="downloadCSV('savings')">Download Savings CSV</button>
+  </div>
+</div>
+
+<div class="footer">
+  <p>&copy; 2025 Earnlyzer. Financial tools for a smarter future.</p>
+</div>
+
+<script>
+  let salary = 0;
+  let totalSpent = 0;
+  let totalSavings = 0;
+  const expenses = [];
+  const savings = [];
+
+  const salaryForm = document.getElementById('salary-form');
+  const expenseForm = document.getElementById('expense-form');
+  const savingForm = document.getElementById('saving-form');
+  const salaryInput = document.getElementById('salary-input');
+  const categoryInput = document.getElementById('expense-category');
+  const amountInput = document.getElementById('expense-amount');
+  const savingCategoryInput = document.getElementById('saving-category');
+  const savingAmountInput = document.getElementById('saving-amount');
+  const totalSalaryDisplay = document.getElementById('total-salary');
+  const totalSpentDisplay = document.getElementById('total-spent');
+  const remainingBalanceDisplay = document.getElementById('remaining-balance');
+  const totalSavingsDisplay = document.getElementById('total-savings');
+  const suggestedSavingsDisplay = document.getElementById('suggested-savings');
+  const expenseTableBody = document.getElementById('expense-table-body');
+  const savingTableBody = document.getElementById('saving-table-body');
+
+  let chart = null;
+
+  salaryForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    salary = parseFloat(salaryInput.value);
+    updateDashboard();
+    salaryInput.value = '';
+  });
+
+  expenseForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const category = categoryInput.value;
+    const amount = parseFloat(amountInput.value);
+
+    if (category && amount > 0) {
+      expenses.push({ category, amount });
+      totalSpent += amount;
+      updateDashboard();
+      renderExpenses();
+      updateChart();
+      categoryInput.value = '';
+      amountInput.value = '';
+    }
+  });
+
+  savingForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const category = savingCategoryInput.value;
+    const amount = parseFloat(savingAmountInput.value);
+
+    if (category && amount > 0) {
+      savings.push({ category, amount });
+      totalSavings += amount;
+      updateDashboard();
+      renderSavings();
+      savingCategoryInput.value = '';
+      savingAmountInput.value = '';
+    }
+  });
+
+  function applySuggestedSavings() {
+    const suggestedAmount = salary * 0.2;
+    const exists = savings.find(s => s.category === "Suggested Savings");
+    if (!exists && suggestedAmount > 0) {
+      savings.push({ category: "Suggested Savings", amount: suggestedAmount });
+      totalSavings += suggestedAmount;
+      renderSavings();
+      updateDashboard();
+    }
+  }
+
+  function updateDashboard() {
+    const suggested = salary * 0.2;
+    totalSalaryDisplay.textContent = `$${salary.toFixed(2)}`;
+    totalSpentDisplay.textContent = `$${totalSpent.toFixed(2)}`;
+    totalSavingsDisplay.textContent = `$${totalSavings.toFixed(2)}`;
+    remainingBalanceDisplay.textContent = `$${(salary - totalSpent - totalSavings).toFixed(2)}`;
+    suggestedSavingsDisplay.textContent = `$${suggested.toFixed(2)}`;
+  }
+
+  function renderExpenses() {
+    expenseTableBody.innerHTML = '';
+    expenses.forEach(exp => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${exp.category}</td><td>${exp.amount.toFixed(2)}</td>`;
+      expenseTableBody.appendChild(row);
+    });
+  }
+
+  function renderSavings() {
+    savingTableBody.innerHTML = '';
+    savings.forEach(save => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${save.category}</td><td>${save.amount.toFixed(2)}</td>`;
+      savingTableBody.appendChild(row);
+    });
+  }
+
+  function updateChart() {
+    const categories = {};
+    expenses.forEach(exp => {
+      categories[exp.category] = (categories[exp.category] || 0) + exp.amount;
+    });
+
+    const labels = Object.keys(categories);
+    const data = Object.values(categories);
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(document.getElementById('expenseChart'), {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Expenses',
+          data: data,
+          backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796']
+        }]
+      }
+    });
+  }
+
+  function downloadCSV(type) {
+    let data = type === 'expenses' ? expenses : savings;
+    let csvContent = "data:text/csv;charset=utf-8,Category,Amount\n" +
+                     data.map(item => `${item.category},${item.amount.toFixed(2)}`).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${type}_data.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Earnlyzer - Financial Empowerment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box; 
+      background-color: #f4f7fa;
+      color: #333;
+    }
+    .header {
+      background-color: #ffffff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header .logo {
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #4e73df;
+      text-decoration: none;
+    }
+
+    .login-button {
+      background-color: #4e73df;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 0.95em;
+      transition: background-color 0.3s;
+    }
+
+    .login-button:hover {
+      background-color: #364fc7;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #4eccdf, #1cc88a);
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    .hero h1 {
+      font-size: 3.5em;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+      margin-top: 10px;
+      font-weight: 400;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background-color: #1cc88a;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1.1em;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+
+    .cta-button:hover {
+      background-color: #17a678;
+    }
+
+    .features {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 60px 20px;
+      flex-wrap: wrap;
+    }
+
+    .feature-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin: 10px;
+      padding: 30px;
+      text-align: center;
+      width: 280px;
+      transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .feature-card i {
+      font-size: 3em;
+      color: #4e73df;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .feature-card p {
+      font-size: 1em;
+      color: #666;
+    }
+
+    .feature-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #4e73df;
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 0.9em;
+      transition: background-color 0.3s;
+    }
+
+    .feature-btn:hover {
+      background-color: #364fc7;
+    }
+
+    .footer {
+      background-color: #3dd2e3;
+      color: white;
+      text-align: center;
+      padding: 30px;
+      font-size: 1.1em;
+    }
+
+    .newsletter {
+      text-align: center;
+      margin: 50px 20px;
+    }
+
+    .newsletter input[type="email"] {
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      margin-right: 10px;
+    }
+
+    .newsletter button {
+      padding: 10px 20px;
+      background-color: #1cc88a;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    .newsletter button:hover {
+      background-color: #17a673;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header with Login Button -->
+  <header class="header">
+    <a href="#" class="logo">Earnlyzer</a>
+    <a href="login.html" class="login-button">Login</a>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome to Earnlyzer</h1>
+    <p>𝖸𝗈𝗎𝗋 𝗀𝖺𝗍𝖾𝗐𝖺𝗒 𝗍𝗈 𝗎𝗌𝖾 𝗒𝗈𝗎𝗋 𝖾𝖺𝗋𝗇𝗂𝗇𝗀 𝖾𝖿𝖿𝖾𝖼𝗍𝗂𝗏𝖾𝗅𝗒</p>
+    <a href="dashboard.html" class="cta-button">Get Started</a>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="feature-card">
+      <i class="fa fa-chart-line"></i>
+      <h3>Real-Time Analytics</h3>
+      <p>Track your investments and financial growth in real-time.</p>
+      <a href="analytics.html" class="feature-btn">Explore Analytics</a>
+    </div>
+    <div class="feature-card">
+      <i class="fa fa-credit-card"></i>
+      <h3>Smart Budgeting</h3>
+      <p>Manage your finances and expenses effortlessly with AI-powered tools.</p>
+      <a href="budgeting.html" class="feature-btn">Try Budgeting</a>
+    </div>
+    <div class="feature-card">
+      <i class="fa fa-lock"></i>
+      <h3>Secure & Reliable</h3>
+      <p>Your data is protected with the latest security protocols and encryption.</p>
+      <a href="security.html" class="feature-btn">Learn More</a>
+    </div>
+  </section>
+
+  <!-- Newsletter Signup -->
+  <section class="newsletter">
+    <h2>Stay Updated</h2>
+    <p>Sign up to get the latest updates and financial tips!</p>
+    <form>
+      <input type="email" placeholder="Enter your email" required />
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <section class="footer">
+    <p>&copy; 2025 Earnlyzer | All rights reserved</p>
+  </section>
+
+</body>
+</html>
